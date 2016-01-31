@@ -11,11 +11,17 @@ paintWidget::paintWidget(QWidget *parent) : QWidget(parent),x(0),y(0)
     setObjectName("circle "+QString::number(wID));
     setAcceptDrops(true);
     parentPoint=parent->pos();
+
     QTime midnight(0,0,0);
     qsrand(midnight.secsTo(QTime::currentTime()));
-     x=qrand()%764;
-     y=qrand()%495;
 
+
+
+}
+
+paintWidget::~paintWidget()
+{
+   wID--;
 
 }
 
@@ -29,16 +35,14 @@ void paintWidget::paintEvent(QPaintEvent *event){
 }
 
 
-void paintWidget::setCircle(circle* _cercle){
+void paintWidget::setCircle(circle* _circle){
 
-    this->m_circle=_cercle;
+    this->m_circle=_circle;
+    x=_circle->getX();
+    y=_circle->getY();
 }
 
-void paintWidget::reXY(int x, int y){
-    this->x=x;
-    this->y=y;
-    repaint();
-}
+
 
 void paintWidget::mouseReleaseEvent(QMouseEvent *event){
 
@@ -52,6 +56,8 @@ void paintWidget::mousePressEvent(QMouseEvent *event){
 
     if(event->button()==Qt::RightButton){
        this->hide();
+
+
     }
     if(event->button()==Qt::LeftButton){
         QPixmap pix(QWidget::grab(QRect(0,0,30,30)));
@@ -64,20 +70,25 @@ void paintWidget::mousePressEvent(QMouseEvent *event){
     }
 }
 
+void paintWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    qDebug()<<event->pos();
+}
+
 void paintWidget::dropEvent(QDropEvent *event)
 {
     qDebug()<<event->source()->objectName();
 }
 
-void paintWidget::animation(paintWidget *circle, QRect coordinateStart, QRect coordinateStop)
+QPropertyAnimation* paintWidget::animation(paintWidget *circle, QRect coordinateStart, QRect coordinateStop, int speed)
 {
-    QPropertyAnimation*  animation= new QPropertyAnimation(this,"geometry");
-    animation->setDuration(1000);
-    animation->setStartValue(coordinateStart);
-    animation->setEasingCurve(QEasingCurve::Linear);
-    animation->setEndValue(coordinateStop);
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
-
+    animation_= new QPropertyAnimation(this,"geometry");
+    animation_->setDuration(speed);
+    animation_->setStartValue(coordinateStart);
+    animation_->setEasingCurve(QEasingCurve::OutExpo);
+    animation_->setEndValue(coordinateStop);
+    animation_->start(QAbstractAnimation::DeleteWhenStopped);
+    return animation_;
 }
 
 int paintWidget::getX()

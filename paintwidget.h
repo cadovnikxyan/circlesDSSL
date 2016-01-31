@@ -12,18 +12,20 @@ class paintWidget : public QWidget
     Q_OBJECT
 public:
     explicit paintWidget(QWidget *parent = 0);
+    ~paintWidget();
     void  paintEvent(QPaintEvent *event);
-    void setCircle(circle *_cercle);
-    void reXY(int x, int y);
+    void setCircle(circle* _circle);
 
     void mouseReleaseEvent ( QMouseEvent * event );
     void mouseMoveEvent ( QMouseEvent * event );
     void mousePressEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent* event);
+
     void dropEvent(QDropEvent* event);
-    void animation(paintWidget* circle,QRect coordinateStart,QRect coordinateStop );
-    static int wID;
+    QPropertyAnimation* animation(paintWidget* circle, QRect coordinateStart, QRect coordinateStop , int speed);
     int getX();
     int getY();
+    QPropertyAnimation*  animation_;
 
 private:
     QPainter painter;
@@ -31,6 +33,7 @@ private:
     QPoint parentPoint;
 
     int x,y;
+    static int wID;
 
 
 public slots:

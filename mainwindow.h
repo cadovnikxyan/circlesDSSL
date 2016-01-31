@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include <QPainter>
 #include "paintwidget.h"
-#include "circle.h"
 #include <QBoxLayout>
+
 namespace Ui {
 class MainWindow;
 }
@@ -33,8 +33,12 @@ private slots:
 private:
     paintWidget* m_paintwidget;
     paintWidget* m_paintwidget1;
-    QList<paintWidget*> circles;
+    QList<paintWidget *> paintW_circles;
+    QList<circle*> circles;
+    QList<QPropertyAnimation*> animations;
     Ui::MainWindow *ui;
+  //  QPropertyAnimation* animation;
+    bool flag=true;
 };
 
 #endif // MAINWINDOW_H

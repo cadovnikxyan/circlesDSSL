@@ -1,12 +1,16 @@
 #include "circle.h"
 #include <QDebug>
-circle::circle():X(0),Y(0)
-{
 
 
+
+
+
+circle::circle():X(0),Y(0){
     countCircle++;
 }
  int circle::countCircle=0;
+ 
+ 
 circle::~circle(){
     countCircle--;
 }
