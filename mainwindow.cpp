@@ -12,8 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+    paintWidget* paint= new paintWidget(this);
+    circles.append(paint);
+    circles.front()->show();
 
-    cirlce_draw();
 
 }
 
@@ -22,47 +24,75 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::print(){
 
-}
 
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event){
-    for(int i=100, j=0;i<200,j<300;i++,j++){
-        m_paintwidget->reXY(i,i);
-        m_paintwidget1->reXY(j,j);
+
+
+    for(int i=0;i<circles.size();i++){
+        QTime midnight(0,0,0);
+        qsrand(midnight.secsTo(QTime::currentTime()));
+
+
+        int x=qrand()%764;
+        int y=qrand()%495;
+        circles.at(i)->animation(circles.at(i), QRect(x, y, 100, 30), QRect(circles.at(i)->getX(), circles.at(i)->getY(), 100, 30));
+
+
     }
+
+
+
 }
 
-bool MainWindow::eventFilter(QObject *obj, QEvent *e)
+void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-//    int i=0;
-//    if(obj->objectName()=="2"&&e->MouseButtonPress){
-//        i++;
-//        qDebug()<<obj->objectName()+ QString::number(i);
-//    }
+    if(event->button()==Qt::RightButton){
+
+        paintWidget* paint= new paintWidget(this);
+        paint->move(event->pos().x(),event->pos().y());
+        paint->show();
+        circles.append(paint);
+    }
 
 }
 
+void MainWindow::animationCircle(paintWidget *circle, QRect coordinateStart, QRect coordinateStop)
+{
+    QPropertyAnimation*  animation= new QPropertyAnimation(circle,"geometry");
+    animation->setDuration(1000);
+    animation->setStartValue(coordinateStart);
+    animation->setEasingCurve(QEasingCurve::Linear);
+    animation->setEndValue(coordinateStop);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
+
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *key)
+{
+    paintWidget* paint= new paintWidget(this);
+    QTime midnight(0,0,0);
+    qsrand(midnight.secsTo(QTime::currentTime()));
+
+
+    int x=qrand()%764;
+    int y=qrand()%495;
+    paint->move(x,y);
+    paint->show();
+    circles.append(paint);
+
+
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    qDebug()<<event->source()->objectName();
+
+}
 
 
 void MainWindow::cirlce_draw()
 {
-    circle* _circle= new circle(10);
-     m_paintwidget= new paintWidget();
-     m_paintwidget1= new paintWidget();
-    m_paintwidget1->reXY(150,150);
 
-//    QBoxLayout* layout= new QBoxLayout();
-
-//   layout->addWidget(m_paintwidget);
-//   layout->addWidget(m_paintwidget1);
-//   ui->centralWidget->layout()->addWidget(m_paintwidget);
-//   ui->centralWidget->layout()->addWidget(m_paintwidget1);
-//   ui->centralWidget->layout()->addChildWidget();
-   //    this->layout()->addItem(layout);
-//    this->layout()->installEventFilter(m_paintwidget);
-//    this->layout()->installEventFilter(m_paintwidget1);
-    qDebug()<<m_paintwidget->objectName();
-    qDebug()<<m_paintwidget1->objectName();
 
 }

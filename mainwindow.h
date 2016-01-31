@@ -17,10 +17,13 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void print();
+
     void cirlce_draw();
     void mouseDoubleClickEvent(QMouseEvent* event);
-    bool eventFilter(QObject *obj, QEvent *e);
+    void mousePressEvent(QMouseEvent* event);
+    void animationCircle(paintWidget* circle,QRect coordinateStart,QRect coordinateStop );
+    void keyPressEvent(QKeyEvent* key);
+    void dropEvent(QDropEvent* event);
 
 private slots:
 
@@ -28,9 +31,9 @@ private slots:
 
 
 private:
-    QPainter painter;
     paintWidget* m_paintwidget;
     paintWidget* m_paintwidget1;
+    QList<paintWidget*> circles;
     Ui::MainWindow *ui;
 };
 

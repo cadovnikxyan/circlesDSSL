@@ -5,7 +5,8 @@
 #include <QPainter>
 #include "circle.h"
 #include <QDebug>
-
+#include <QPropertyAnimation>
+#include <QTime>
 class paintWidget : public QWidget
 {
     Q_OBJECT
@@ -18,18 +19,17 @@ public:
     void mouseReleaseEvent ( QMouseEvent * event );
     void mouseMoveEvent ( QMouseEvent * event );
     void mousePressEvent(QMouseEvent *event);
-
-    void dragEnterEvent(QDragEnterEvent* event);
-    void dragMoveEvent(QDragMoveEvent* event);
-    void dragLeaveEvent(QDragLeaveEvent* event);
     void dropEvent(QDropEvent* event);
+    void animation(paintWidget* circle,QRect coordinateStart,QRect coordinateStop );
     static int wID;
-    bool eventFilter(QObject *obj, QEvent *e);
-    int i=0;
+    int getX();
+    int getY();
 
 private:
     QPainter painter;
     circle* m_circle;
+    QPoint parentPoint;
+
     int x,y;
 
 
