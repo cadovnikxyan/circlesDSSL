@@ -2,9 +2,9 @@
 #include <QDrag>
 #include <QMimeData>
 
-int paintWidget::wID=0;
+int paintWidget::allID=0;
 paintWidget::paintWidget(QWidget *parent) : QWidget(parent),x(0),y(0){
-    wID++;
+    wID=allID++;
     setMouseTracking(true);
     setMaximumSize(200,200);
     setObjectName("circle "+QString::number(wID));
@@ -19,7 +19,7 @@ paintWidget::paintWidget(QWidget *parent) : QWidget(parent),x(0),y(0){
 }
 
 paintWidget::~paintWidget(){
-   wID--;
+   allID--;
 
 }
 
@@ -97,6 +97,16 @@ int paintWidget::getX(){
 
 int paintWidget::getY(){
     return this->y;
+}
+
+int paintWidget::getWID() const
+{
+    return wID;
+}
+
+void paintWidget::setWID(int value)
+{
+    wID = value;
 }
 
 

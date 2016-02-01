@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     timer=new QTimer();
     QObject::connect(timer,SIGNAL(timeout()), this, SLOT(timer_overflow()));
+
 }
 
 MainWindow::~MainWindow(){
@@ -38,7 +39,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     }else if(event->button()==Qt::LeftButton){
 
             animationStartStop();
-            timer->start(100);
+            timer->start(1000);
         }
     }
 
@@ -57,6 +58,7 @@ void MainWindow::keyPressEvent(QKeyEvent *key){
 
         m_circle->setX(x);
         m_circle->setY(y);
+        m_circle->setID(paint->getWID());
 
         paint->setCircle(m_circle);
         paint->move(x,y);
@@ -64,6 +66,7 @@ void MainWindow::keyPressEvent(QKeyEvent *key){
 
         circles.push_back(m_circle);
         paintW_circles.append(paint);
+        paintHash.insert(paint->getWID(),paint);
 
     }else if(key->key()==Qt::Key_Control){
         for(int i=0;i<circles.size();i++){
@@ -97,6 +100,7 @@ void MainWindow::widgetCircle(QMouseEvent* event){
 
     m_circle->setX(event->pos().x());
     m_circle->setY(event->pos().y());
+    m_circle->setID(paint->getWID());
 
     paint->setCircle(m_circle);
     paint->move(event->pos().x(),event->pos().y());
@@ -104,7 +108,7 @@ void MainWindow::widgetCircle(QMouseEvent* event){
 
     circles.push_back(m_circle);
     paintW_circles.append(paint);
-
+    paintHash.insert(paint->getWID(),paint);
 }
 
 void MainWindow::animationStartStop(){
@@ -121,24 +125,34 @@ void MainWindow::animationStartStop(){
         for(int i=0;i<animations.size();i++){
             animations.at(i)->resume();
             mouseflag=true;
-            timer->start(100);
+            timer->start(1000);
             }
     }
 }
 
+void MainWindow::threadPoll(circle* c){
+
+      qDebug()<<paintHash.value(c->getID());
+}
 
 
 void MainWindow::timer_overflow(){
 
     for(int i=0;i<paintW_circles.size();i++){
+
         circles.at(i)->setX(paintW_circles.at(i)->pos().x());
         circles.at(i)->setY(paintW_circles.at(i)->pos().y());
+
+        settlements* s= new settlements(circles.at(i));
+
+        QObject::connect(s,SIGNAL(finish(circle*)),this,SLOT(threadPoll(circle*)));
+        s->setArrayCircles(&circles);
+
+        QThreadPool* pool= new QThreadPool();
+        pool->start(s);
    }
-    qDebug()<<QThread::currentThreadId();
-    settlements* thread= new settlements("thread");
-    thread->setArrayCircles(&circles);
-    thread->run();
 }
+
 
 
 

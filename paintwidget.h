@@ -32,13 +32,16 @@ public:
     int getY();
     QPropertyAnimation*  animation_;
 
+     int getWID() const;
+     void setWID(int value);
+
 private:
     QPainter painter;
     circle* m_circle;
     QPoint parentPoint;
 
-    int x,y;
-    static int wID;
+    int x,y,wID;
+    static int allID;
 
 
 public slots:

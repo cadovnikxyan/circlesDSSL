@@ -3,20 +3,36 @@
 #include <QThread>
 #include <QString>
 #include <QDebug>
+#include <QRunnable>
 #include <vector>
-
+#include <cmath>
+#include <map>
 #include "circle.h"
 
-class settlements : public QThread
+
+
+
+class settlements :public QObject, public QRunnable
 {
+
+Q_OBJECT
 public:
-    explicit settlements(QString s);
-        void run();
-        void setArrayCircles(std::vector<circle* >* circles_);
+     settlements(circle* s);
+     ~settlements();
+     void run();
+     void setArrayCircles(std::vector<circle* >* circles_);
+
+signals:
+     void finish(circle* result);
+         	        
 private:
-        int i=0;
+        void vector();
+        std::vector<double> vec_m;
         std::vector<circle* >* circles;
-        QString name;
+        std::map<double,circle*> vec_map;
+        std::map<double,circle*>::iterator it;
+        circle* currentCircle;
+
 };
 
 #endif // SETTLEMENTS_H

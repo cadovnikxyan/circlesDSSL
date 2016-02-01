@@ -20,11 +20,21 @@ void circle::setY(int Y_){
     this->Y=Y_;
 }
 
-int circle::getX(){
+int circle::getX()const{
     return this->X;
 }
 
-int circle::getY(){
+int circle::getY()const{
     return this->Y;
+}
+
+int circle::getID() const
+{
+    return ID;
+}
+
+void circle::setID(int value)
+{
+    ID = value;
 }
 

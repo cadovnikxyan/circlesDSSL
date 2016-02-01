@@ -5,6 +5,8 @@
 #include <QPainter>
 #include <QBoxLayout>
 #include <QTimer>
+#include <QThreadPool>
+#include <QHash>
 #include <vector>
 
 #include "settlements.h"
@@ -17,6 +19,7 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    QThread thr;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -31,9 +34,12 @@ public:
     void animationStartStop();
 
 signals:
+
     void circlePosChange(int i);
 
 public slots:
+
+    void threadPoll(circle* c);
     void timer_overflow();
 
 private:
@@ -42,7 +48,7 @@ private:
     std::vector<circle*> circles;
     QList<QPropertyAnimation*> animations;
     Ui::MainWindow *ui;
-
+    QHash<int,paintWidget*> paintHash;
     bool mouseflag;
 };
 

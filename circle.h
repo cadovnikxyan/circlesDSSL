@@ -12,17 +12,20 @@ public:
 
     void setX(int X_);
     void setY(int Y_);
-    int getX();
-    int getY();
+    int getX() const;
+    int getY() const;
 
 
 
     static int countCircle;
     int X,Y;
 
+    int getID() const;
+    void setID(int value);
+
 private:
 
-
+    int ID;
     int radius,speed;
 };
 
