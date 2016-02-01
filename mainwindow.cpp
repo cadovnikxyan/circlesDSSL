@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow(){
     delete ui;
 }
-
+//запуск анимации шариков
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event){
 
     QTime midnight(0,0,0);
@@ -30,7 +30,8 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event){
          animation();
     }
 }
-
+//добавление нового шарика в пустое место 
+//остановка - продолжение анимации шариков
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if(event->button()==Qt::RightButton){
 
@@ -43,7 +44,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
         }
     }
 
-
+//добавление новых шариков в случайную позицию
 void MainWindow::keyPressEvent(QKeyEvent *key){
     QTime midnight(0,0,0);
     qsrand(midnight.secsTo(QTime::currentTime()));
@@ -79,7 +80,7 @@ void MainWindow::dropEvent(QDropEvent *event){
     qDebug()<<event->source()->objectName();
 
 }
-
+//функция обработки анимации
 void MainWindow::animation(){
 
     for(int i=0;i<paintW_circles.size();i++){
@@ -135,7 +136,7 @@ void MainWindow::threadPoll(circle* c){
       qDebug()<<paintHash.value(c->getID());
 }
 
-
+//получение координат шариков при анимации
 void MainWindow::timer_overflow(){
 
     for(int i=0;i<paintW_circles.size();i++){

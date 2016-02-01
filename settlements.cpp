@@ -1,5 +1,6 @@
 #include "settlements.h"
 
+<<<<<<< HEAD
 
 settlements::settlements(circle* s){
 
@@ -8,6 +9,13 @@ settlements::settlements(circle* s){
 }
 
 settlements::~settlements(){
+=======
+//идея рассчетов такая :
+//поток будет получать на вход текущий экземпляр класса с координатами шарика и считать ближайщий к нему из вектора со всеми 
+//координатами, определять массив координат и передавать их в слот завершения потока где будет перезапускаться анимация
+settlements::settlements(QString s):name(s)
+{
+>>>>>>> 068b4f1443bc9f52d42403e8e2275ab0fc2551eb
 
 }
 

@@ -22,7 +22,7 @@ paintWidget::~paintWidget(){
    allID--;
 
 }
-
+//отрисовка шарика
 void paintWidget::paintEvent(QPaintEvent *event){
 
     painter.begin(this);
@@ -32,7 +32,7 @@ void paintWidget::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
-
+//установка класса хранителя координат шарика
 void paintWidget::setCircle(circle* _circle){
 
     this->m_circle=_circle;
@@ -49,7 +49,8 @@ void paintWidget::mouseMoveEvent(QMouseEvent *event){
 
 
 }
-
+//лопание шарика по нажатию правой кнопки мыши
+//перетаскивание шарика левой кнопкой мыши (dropEvent не определен)
 void paintWidget::mousePressEvent(QMouseEvent *event){
 
     if(event->button()==Qt::RightButton){
@@ -79,6 +80,8 @@ bool paintWidget::eventFilter(QObject *obj, QEvent *event){
 void paintWidget::dropEvent(QDropEvent *event){
     qDebug()<<event->source()->objectName();
 }
+//функция определения анимации шарика
+//QEasingCurve::OutExpo практически соответсвует заданной функции силы притяжения 
 
 QPropertyAnimation* paintWidget::animation(paintWidget *circle, QRect coordinateStart, QRect coordinateStop, int speed){
     animation_= new QPropertyAnimation(this,"geometry");
