@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <vector>
 
+#include "settlements.h"
 #include "paintwidget.h"
 
 namespace Ui {

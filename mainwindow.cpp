@@ -133,8 +133,11 @@ void MainWindow::timer_overflow(){
     for(int i=0;i<paintW_circles.size();i++){
         circles.at(i)->setX(paintW_circles.at(i)->pos().x());
         circles.at(i)->setY(paintW_circles.at(i)->pos().y());
-        qDebug()<<circles.at(i)->getX()<<circles.at(i)->getY();
    }
+    qDebug()<<QThread::currentThreadId();
+    settlements* thread= new settlements("thread");
+    thread->setArrayCircles(&circles);
+    thread->run();
 }
 
 
