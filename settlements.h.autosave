@@ -16,6 +16,7 @@ class settlements :public QObject, public QRunnable
 {
 
 Q_OBJECT
+    
 public:
      settlements(circle* s);
      ~settlements();

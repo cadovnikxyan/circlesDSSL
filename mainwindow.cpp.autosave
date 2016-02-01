@@ -71,7 +71,7 @@ void MainWindow::keyPressEvent(QKeyEvent *key){
         paintHash.insert(paint->getWID(),paint);
 
     }else if(key->key()==Qt::Key_Control){
-        for(int i=0;i<circles.size();i++){
+        for(int i=0;i<(int)circles.size();i++){
             qDebug()<<QString::number(circles.at(i)->getX())+"  "+QString::number(circles.at(i)->getY());
         }
     }
@@ -81,19 +81,9 @@ void MainWindow::dropEvent(QDropEvent *event){
     qDebug()<<event->source()->objectName();
 
 }
-//функция обработки анимации
-void MainWindow::animation(){
 
-    for(int i=0;i<paintW_circles.size();i++){
-        int x=qrand()%500;
-        int y=qrand()%300;
-        animations.append(paintW_circles.at(i)->
-                animation(paintW_circles.at(i), QRect(x, y, 30, 30)
-                          ,QRect(paintW_circles.at(i)->getX(), paintW_circles.at(i)->getY(), 30, 30)
-                          ,30000));
-    }
 
-}
+
 
 void MainWindow::widgetCircle(QMouseEvent* event){
 
@@ -111,27 +101,6 @@ void MainWindow::widgetCircle(QMouseEvent* event){
     circles.push_back(m_circle);
     paintW_circles.append(paint);
     paintHash.insert(paint->getWID(),paint);
-}
-
-
-
-void MainWindow::animationStartStop(){
-
-    if(mouseflag){
-
-        for(int i=0;i<animations.size();i++){
-            animations.at(i)->pause();
-            mouseflag=false;
-            timer->stop();
-            }
-    }else{
-
-        for(int i=0;i<animations.size();i++){
-            animations.at(i)->resume();
-            mouseflag=true;
-            timer->start(1000);
-            }
-    }
 }
 
 

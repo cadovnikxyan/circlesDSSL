@@ -11,21 +11,15 @@ settlements::settlements(circle* s){
 settlements::~settlements(){
 }
 
-//идея рассчетов такая :
-//поток будет получать на вход текущий экземпляр класса с координатами шарика и считать ближайщий к нему из вектора со всеми 
-//координатами, определять массив координат и передавать их в слот завершения потока где будет перезапускаться анимация
+
+//поток получает на вход текущий экземпляр класса с координатами шарика и находит ближайщий к нему из вектора со всеми
+//координатами и передает его координаты в слот завершения потока где будет перезапускаться анимация
 
 
 void settlements::run(){
 
     vector();
-//    for(int i=0;i<(int)vec_m.size();i++){
-//        if(vec_m.at(i)!=0){
-            qDebug()<<QString::number(vec_map.find(vec_m[1])->second->getID())+": "+QString::number(vec_map.find(vec_m[1])->first);
-//        }
-//    }
-
-    emit finish(currentCircle);
+    emit finish(currentCircle,vec_map.find(vec_m[1])->second);
 }
 
 
