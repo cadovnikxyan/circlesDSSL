@@ -3,8 +3,7 @@
 #include <QMimeData>
 
 int paintWidget::wID=0;
-paintWidget::paintWidget(QWidget *parent) : QWidget(parent),x(0),y(0)
-{
+paintWidget::paintWidget(QWidget *parent) : QWidget(parent),x(0),y(0){
     wID++;
     setMouseTracking(true);
     setMaximumSize(200,200);
@@ -19,8 +18,7 @@ paintWidget::paintWidget(QWidget *parent) : QWidget(parent),x(0),y(0)
 
 }
 
-paintWidget::~paintWidget()
-{
+paintWidget::~paintWidget(){
    wID--;
 
 }
@@ -60,7 +58,7 @@ void paintWidget::mousePressEvent(QMouseEvent *event){
 
     }
     if(event->button()==Qt::LeftButton){
-        QPixmap pix(QWidget::grab(QRect(0,0,30,30)));
+        QPixmap pix(QWidget::grab(QRect(0,0,28,28)));
         QDrag *drag = new QDrag(this);
         QMimeData *mime = new QMimeData;
         drag->setMimeData(mime);
@@ -70,34 +68,34 @@ void paintWidget::mousePressEvent(QMouseEvent *event){
     }
 }
 
-void paintWidget::mouseDoubleClickEvent(QMouseEvent *event)
-{
+void paintWidget::mouseDoubleClickEvent(QMouseEvent *event){
     qDebug()<<event->pos();
 }
 
-void paintWidget::dropEvent(QDropEvent *event)
-{
+bool paintWidget::eventFilter(QObject *obj, QEvent *event){
+
+}
+
+void paintWidget::dropEvent(QDropEvent *event){
     qDebug()<<event->source()->objectName();
 }
 
-QPropertyAnimation* paintWidget::animation(paintWidget *circle, QRect coordinateStart, QRect coordinateStop, int speed)
-{
+QPropertyAnimation* paintWidget::animation(paintWidget *circle, QRect coordinateStart, QRect coordinateStop, int speed){
     animation_= new QPropertyAnimation(this,"geometry");
     animation_->setDuration(speed);
     animation_->setStartValue(coordinateStart);
     animation_->setEasingCurve(QEasingCurve::OutExpo);
     animation_->setEndValue(coordinateStop);
     animation_->start(QAbstractAnimation::DeleteWhenStopped);
+
     return animation_;
 }
 
-int paintWidget::getX()
-{
+int paintWidget::getX(){
     return this->x;
 }
 
-int paintWidget::getY()
-{
+int paintWidget::getY(){
     return this->y;
 }
 

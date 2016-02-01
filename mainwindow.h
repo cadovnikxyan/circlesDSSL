@@ -3,8 +3,11 @@
 
 #include <QMainWindow>
 #include <QPainter>
-#include "paintwidget.h"
 #include <QBoxLayout>
+#include <QTimer>
+#include <vector>
+
+#include "paintwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -18,27 +21,28 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void cirlce_draw();
     void mouseDoubleClickEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
-    void animationCircle(paintWidget* circle,QRect coordinateStart,QRect coordinateStop );
     void keyPressEvent(QKeyEvent* key);
     void dropEvent(QDropEvent* event);
+    void animation();
+    void widgetCircle(QMouseEvent* event);
+    void animationStartStop();
 
-private slots:
+signals:
+    void circlePosChange(int i);
 
- signals:
-
+public slots:
+    void timer_overflow();
 
 private:
-    paintWidget* m_paintwidget;
-    paintWidget* m_paintwidget1;
+    QTimer* timer;
     QList<paintWidget *> paintW_circles;
-    QList<circle*> circles;
+    std::vector<circle*> circles;
     QList<QPropertyAnimation*> animations;
     Ui::MainWindow *ui;
-  //  QPropertyAnimation* animation;
-    bool flag=true;
+
+    bool mouseflag;
 };
 
 #endif // MAINWINDOW_H

@@ -1,11 +1,10 @@
 #ifndef CIRCLE_H
 #define CIRCLE_H
 
-#include <QPaintEvent>
-#include <QPainter>
-#include <QMainWindow>
 
-class circle : public QPainter{
+
+
+class circle {
 
 public:
     circle();

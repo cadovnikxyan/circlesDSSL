@@ -1,6 +1,12 @@
 #include "settlements.h"
 
-settlements::settlements()
-{
+
+settlements::settlements(QString* s):name(s){
 
 }
+
+void settlements::run(){
+
+}
+
+

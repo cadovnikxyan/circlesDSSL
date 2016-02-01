@@ -1,13 +1,19 @@
 #ifndef SETTLEMENTS_H
 #define SETTLEMENTS_H
 #include <QThread>
+#include <QString>
 
-class settlements
+#include "circle.h"
+
+class settlements : public QThread
 {
 public:
-    settlements();
-    void run();
-    void stop();
+
+Q_OBJECT
+    explicit settlements(QString* s);
+        void run();
+private:
+        QString* name;
 };
 
 #endif // SETTLEMENTS_H

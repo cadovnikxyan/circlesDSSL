@@ -3,13 +3,17 @@
 
 #include <QWidget>
 #include <QPainter>
-#include "circle.h"
+#include <QPaintEvent>
 #include <QDebug>
 #include <QPropertyAnimation>
 #include <QTime>
+
+#include "circle.h"
+
 class paintWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit paintWidget(QWidget *parent = 0);
     ~paintWidget();
@@ -20,6 +24,7 @@ public:
     void mouseMoveEvent ( QMouseEvent * event );
     void mousePressEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent* event);
+    bool eventFilter(QObject *obj, QEvent *event);
 
     void dropEvent(QDropEvent* event);
     QPropertyAnimation* animation(paintWidget* circle, QRect coordinateStart, QRect coordinateStop , int speed);
