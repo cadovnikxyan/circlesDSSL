@@ -1,8 +1,6 @@
 #ifndef SETTLEMENTS_H
 #define SETTLEMENTS_H
-#include <QThread>
-#include <QString>
-#include <QDebug>
+#include <QObject>
 #include <QRunnable>
 #include <vector>
 #include <cmath>
@@ -16,6 +14,7 @@ class settlements :public QObject, public QRunnable
 {
 
 Q_OBJECT
+
 public:
      settlements(circle* s);
      ~settlements();
@@ -30,7 +29,6 @@ private:
         std::vector<double> vec_m;
         std::vector<circle* >* circles;
         std::map<double,circle*> vec_map;
-        std::map<double,circle*>::iterator it;
         circle* currentCircle;
 
 };

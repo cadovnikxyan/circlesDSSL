@@ -3,18 +3,17 @@
 #include <QMimeData>
 
 int paintWidget::allID=0;
+
 paintWidget::paintWidget(QWidget *parent) : QWidget(parent),x(0),y(0){
+
     wID=allID++;
     setMouseTracking(true);
     setMaximumSize(200,200);
     setObjectName("circle "+QString::number(wID));
     setAcceptDrops(true);
-    parentPoint=parent->pos();
 
-    QTime midnight(0,0,0);
-    qsrand(midnight.secsTo(QTime::currentTime()));
-
-
+//    QTime midnight(0,0,0);
+//    qsrand(midnight.secsTo(QTime::currentTime()));
 
 }
 
@@ -23,7 +22,7 @@ paintWidget::~paintWidget(){
 
 }
 //отрисовка шарика
-void paintWidget::paintEvent(QPaintEvent *event){
+void paintWidget::paintEvent(QPaintEvent *){
 
     painter.begin(this);
     painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::FlatCap));
@@ -41,21 +40,16 @@ void paintWidget::setCircle(circle* _circle){
 }
 
 
-
-void paintWidget::mouseReleaseEvent(QMouseEvent *event){
-
-}
 void paintWidget::mouseMoveEvent(QMouseEvent *event){
 
-
 }
+
 //лопание шарика по нажатию правой кнопки мыши
 //перетаскивание шарика левой кнопкой мыши (dropEvent не определен)
 void paintWidget::mousePressEvent(QMouseEvent *event){
 
     if(event->button()==Qt::RightButton){
        this->hide();
-
 
     }
     if(event->button()==Qt::LeftButton){
@@ -69,46 +63,36 @@ void paintWidget::mousePressEvent(QMouseEvent *event){
     }
 }
 
-void paintWidget::mouseDoubleClickEvent(QMouseEvent *event){
-    qDebug()<<event->pos();
-}
-
-bool paintWidget::eventFilter(QObject *obj, QEvent *event){
-
-}
 
 void paintWidget::dropEvent(QDropEvent *event){
-    qDebug()<<event->source()->objectName();
+
 }
+
+
 //функция определения анимации шарика
 //QEasingCurve::OutExpo практически соответсвует заданной функции силы притяжения 
-
-QPropertyAnimation* paintWidget::animation(paintWidget *circle, QRect coordinateStart, QRect coordinateStop, int speed){
-    animation_= new QPropertyAnimation(this,"geometry");
+void paintWidget::animation( QRect coordinateStart, QRect coordinateStop, int speed){
+   QPropertyAnimation* animation_= new QPropertyAnimation(this,"geometry");
     animation_->setDuration(speed);
     animation_->setStartValue(coordinateStart);
-    animation_->setEasingCurve(QEasingCurve::OutExpo);
+    animation_->setEasingCurve(QEasingCurve::OutBack);
     animation_->setEndValue(coordinateStop);
     animation_->start(QAbstractAnimation::DeleteWhenStopped);
-
-    return animation_;
 }
 
-int paintWidget::getX(){
+int paintWidget::getX() const{
     return this->x;
 }
 
-int paintWidget::getY(){
+int paintWidget::getY() const{
     return this->y;
 }
 
-int paintWidget::getWID() const
-{
+int paintWidget::getWID() const{
     return wID;
 }
 
-void paintWidget::setWID(int value)
-{
+void paintWidget::setWID(int value){
     wID = value;
 }
 

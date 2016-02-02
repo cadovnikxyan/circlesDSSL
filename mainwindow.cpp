@@ -1,14 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QThread>
-#include <QDebug>
-#include <QVBoxLayout>
-
 
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),mouseflag(true){
+    ui(new Ui::MainWindow){
 
     ui->setupUi(this);
     timer=new QTimer();
@@ -19,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow(){
     delete ui;
 }
+
 //запуск анимации шариков
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event){
 
@@ -26,11 +23,12 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event){
     qsrand(midnight.secsTo(QTime::currentTime()));
 
     if(event->button()==Qt::LeftButton){
-         mouseflag=true;
-        // animation();
+
+
          timer->start(500);
     }
 }
+
 //добавление нового шарика в пустое место
 //остановка - продолжение анимации шариков
 void MainWindow::mousePressEvent(QMouseEvent *event){
@@ -39,14 +37,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
         widgetCircle(event);
 
     }else if(event->button()==Qt::LeftButton){
-
-          //  animationStartStop();
-            timer->start(1000);
+            timer->start(500);
         }
     }
 
 //добавление новых шариков в случайную позицию
 void MainWindow::keyPressEvent(QKeyEvent *key){
+
     QTime midnight(0,0,0);
     qsrand(midnight.secsTo(QTime::currentTime()));
 
@@ -67,33 +64,15 @@ void MainWindow::keyPressEvent(QKeyEvent *key){
         paint->show();
 
         circles.push_back(m_circle);
-        paintW_circles.append(paint);
         paintHash.insert(paint->getWID(),paint);
 
-    }else if(key->key()==Qt::Key_Control){
-        for(int i=0;i<circles.size();i++){
-            qDebug()<<QString::number(circles.at(i)->getX())+"  "+QString::number(circles.at(i)->getY());
-        }
     }
 }
 
 void MainWindow::dropEvent(QDropEvent *event){
-    qDebug()<<event->source()->objectName();
 
 }
-//функция обработки анимации
-void MainWindow::animation(){
 
-    for(int i=0;i<paintW_circles.size();i++){
-        int x=qrand()%500;
-        int y=qrand()%300;
-        animations.append(paintW_circles.at(i)->
-                animation(paintW_circles.at(i), QRect(x, y, 30, 30)
-                          ,QRect(paintW_circles.at(i)->getX(), paintW_circles.at(i)->getY(), 30, 30)
-                          ,30000));
-    }
-
-}
 
 void MainWindow::widgetCircle(QMouseEvent* event){
 
@@ -109,56 +88,38 @@ void MainWindow::widgetCircle(QMouseEvent* event){
     paint->show();
 
     circles.push_back(m_circle);
-    paintW_circles.append(paint);
     paintHash.insert(paint->getWID(),paint);
-}
 
-
-
-void MainWindow::animationStartStop(){
-
-    if(mouseflag){
-
-        for(int i=0;i<animations.size();i++){
-            animations.at(i)->pause();
-            mouseflag=false;
-            timer->stop();
-            }
-    }else{
-
-        for(int i=0;i<animations.size();i++){
-            animations.at(i)->resume();
-            mouseflag=true;
-            timer->start(1000);
-            }
-    }
 }
 
 
 //слот завершения потока рассчета ближайшего шарика и запуск анимации движения к нему
 void MainWindow::threadPoll(circle* c,circle* target){
 
-      paintWidget* paint= paintHash.find(c->getID()).value();
-      paint->animation(paint,QRect(c->getX(), c->getY(), 30, 30),QRect(target->getX(), target->getY(), 30, 30),3000);
-
+      paintWidget* paint = paintHash.find(c->getID()).value();
+      paint->animation(QRect(c->getX(), c->getY(), 30, 30),QRect(target->getX(), target->getY(), 30, 30),3000);
 }
 
 //получение координат шариков при анимации
-
 void MainWindow::timer_overflow(){
 
-    for(int i=0;i<paintW_circles.size();i++){
-
-        circles.at(i)->setX(paintW_circles.at(i)->pos().x());
-        circles.at(i)->setY(paintW_circles.at(i)->pos().y());
+    int i=0;
+    QHash<int,paintWidget*>::iterator it=paintHash.begin();
+    for(;it!=paintHash.end();it++){
+        paintWidget* paint=it.value();
+        if(i==(int)circles.size()){
+            i=0;
+        }
+        circles.at(i)->setX(paint->pos().x());
+        circles.at(i)->setY(paint->pos().y());
 
         settlements* s= new settlements(circles.at(i));
 
         QObject::connect(s,SIGNAL(finish(circle*,circle*)),this,SLOT(threadPoll(circle*,circle*)));
         s->setArrayCircles(&circles);
 
-        QThreadPool* pool= new QThreadPool();
-        pool->start(s);
+        QThreadPool::globalInstance()->start(s);
+        i++;
    }
 }
 

@@ -9,6 +9,7 @@ settlements::settlements(circle* s){
 }
 
 settlements::~settlements(){
+
 }
 
 
@@ -30,7 +31,6 @@ void settlements::setArrayCircles(std::vector<circle*> *circles_){
 }
 
 void settlements::vector(){
-
     double vec=0;
     for(int i=0;i<(int)circles->size();i++){
         circle* c = circles->at(i);
@@ -39,7 +39,6 @@ void settlements::vector(){
         vec_map.insert(std::pair<double,circle*>(vec,c));
     }
     std::sort(vec_m.begin(),vec_m.end());
-
 }
 
 

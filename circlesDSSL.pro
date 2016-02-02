@@ -17,11 +17,13 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     circle.cpp \
     settlements.cpp \
-    paintwidget.cpp
+    paintwidget.cpp \
+    customcurve.cpp
 
 HEADERS  += mainwindow.h \
     circle.h \
     settlements.h \
-    paintwidget.h
+    paintwidget.h \
+    customcurve.h
 
 FORMS    += mainwindow.ui
