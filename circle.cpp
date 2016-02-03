@@ -28,13 +28,15 @@ int circle::getY()const{
     return this->Y;
 }
 
-int circle::getID() const
-{
+int circle::getID() const{
     return ID;
 }
 
-void circle::setID(int value)
-{
+void circle::setID(int value){
     ID = value;
+}
+
+void circle::del(){
+    delete this;
 }
 

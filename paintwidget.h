@@ -6,8 +6,10 @@
 #include <QPaintEvent>
 #include <QDebug>
 #include <QPropertyAnimation>
-
+#include <QEasingCurve>
+#include <cmath>
 #include "circle.h"
+#include "float.h"
 
 class paintWidget : public QWidget
 {
@@ -22,8 +24,6 @@ public:
 
     void mouseMoveEvent ( QMouseEvent * event );
     void mousePressEvent(QMouseEvent *event);
-    void dropEvent(QDropEvent* event);
-
     void animation(QRect coordinateStart, QRect coordinateStop , int speed);
     int getX() const;
     int getY() const;
@@ -31,12 +31,17 @@ public:
     int getWID() const;
     void setWID(int value);
 
+signals:
+    void destroy(int* id);
+
 private:
     QPainter painter;
     circle* m_circle;
+    QPoint offset;
 
     int x,y,wID;
     static int allID;
+//    qreal easingCurve(qreal progress);
 
 
 public slots:

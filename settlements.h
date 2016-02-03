@@ -2,6 +2,7 @@
 #define SETTLEMENTS_H
 #include <QObject>
 #include <QRunnable>
+#include <QDebug>
 #include <vector>
 #include <cmath>
 #include <map>
@@ -25,12 +26,12 @@ signals:
      void finish(circle* result,circle* target);
          	        
 private:
-        void vector();
+        double vector();
         std::vector<double> vec_m;
         std::vector<circle* >* circles;
         std::map<double,circle*> vec_map;
-        circle* currentCircle;
-
+        circle* currentCircle;       
+        double min_elem(std::vector<double> *a);
 };
 
 #endif // SETTLEMENTS_H

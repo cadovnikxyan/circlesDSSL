@@ -26,8 +26,7 @@ public:
 
     void mouseDoubleClickEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
-    void keyPressEvent(QKeyEvent* key);
-    void dropEvent(QDropEvent* event);
+    void startCircles(int n);
     void widgetCircle(QMouseEvent* event);
 
 
@@ -39,6 +38,7 @@ public slots:
 
     void threadPoll(circle* c,circle* target);
     void timer_overflow();
+    void paintDestroy(int* id);
 
 private:
 
@@ -46,6 +46,7 @@ private:
     std::vector<circle*> circles;
     Ui::MainWindow *ui;
     QHash<int,paintWidget*> paintHash;
+    int dragID;
 
 };
 

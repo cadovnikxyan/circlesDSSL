@@ -12,13 +12,11 @@ paintWidget::paintWidget(QWidget *parent) : QWidget(parent),x(0),y(0){
     setObjectName("circle "+QString::number(wID));
     setAcceptDrops(true);
 
-//    QTime midnight(0,0,0);
-//    qsrand(midnight.secsTo(QTime::currentTime()));
-
 }
 
 paintWidget::~paintWidget(){
    allID--;
+
 
 }
 //отрисовка шарика
@@ -41,7 +39,10 @@ void paintWidget::setCircle(circle* _circle){
 
 
 void paintWidget::mouseMoveEvent(QMouseEvent *event){
-
+    if(event->buttons() & Qt::LeftButton)
+        {
+            this->move(mapToParent(event->pos() - offset));
+        }
 }
 
 //лопание шарика по нажатию правой кнопки мыши
@@ -49,32 +50,42 @@ void paintWidget::mouseMoveEvent(QMouseEvent *event){
 void paintWidget::mousePressEvent(QMouseEvent *event){
 
     if(event->button()==Qt::RightButton){
-       this->hide();
+
+        this->hide();
+        m_circle->del();
+        emit destroy(&wID);
 
     }
     if(event->button()==Qt::LeftButton){
-        QPixmap pix(QWidget::grab(QRect(0,0,28,28)));
-        QDrag *drag = new QDrag(this);
-        QMimeData *mime = new QMimeData;
-        drag->setMimeData(mime);
-        drag->setPixmap(pix);
-        Qt::DropAction dropAction = drag->start(Qt::CopyAction | Qt::MoveAction);
-
+          offset = event->pos();
     }
 }
 
 
-void paintWidget::dropEvent(QDropEvent *event){
 
+
+
+
+qreal easingCurve(qreal progress){
+
+    qreal progress_=progress*1000.0;
+    qreal result=(1/progress_)-(1/(progress_*progress_));
+    return result;
 }
 
-
 //функция определения анимации шарика
-//QEasingCurve::OutExpo практически соответсвует заданной функции силы притяжения 
+//QEasingCurve::OutBack практически соответсвует заданной функции силы притяжения
+
 void paintWidget::animation( QRect coordinateStart, QRect coordinateStop, int speed){
-   QPropertyAnimation* animation_= new QPropertyAnimation(this,"geometry");
+
+    QPropertyAnimation* animation_= new QPropertyAnimation(this,"geometry");
     animation_->setDuration(speed);
     animation_->setStartValue(coordinateStart);
+
+    QEasingCurve curve;
+    QEasingCurve::EasingFunction f=&easingCurve;
+    curve.setCustomType(f);
+
     animation_->setEasingCurve(QEasingCurve::OutBack);
     animation_->setEndValue(coordinateStop);
     animation_->start(QAbstractAnimation::DeleteWhenStopped);
@@ -95,5 +106,7 @@ int paintWidget::getWID() const{
 void paintWidget::setWID(int value){
     wID = value;
 }
+
+
 
 

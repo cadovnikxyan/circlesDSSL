@@ -19,6 +19,7 @@ public:
 
     int getID() const;
     void setID(int value);
+    void del();
 
 private:
 

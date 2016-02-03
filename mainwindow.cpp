@@ -4,11 +4,12 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow){
+    ui(new Ui::MainWindow),dragID(0){
 
     ui->setupUi(this);
     timer=new QTimer();
     QObject::connect(timer,SIGNAL(timeout()), this, SLOT(timer_overflow()));
+    startCircles(10);
 
 }
 
@@ -19,12 +20,7 @@ MainWindow::~MainWindow(){
 //запуск анимации шариков
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event){
 
-    QTime midnight(0,0,0);
-    qsrand(midnight.secsTo(QTime::currentTime()));
-
     if(event->button()==Qt::LeftButton){
-
-
          timer->start(500);
     }
 }
@@ -38,17 +34,18 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 
     }else if(event->button()==Qt::LeftButton){
             timer->start(500);
-        }
     }
+}
 
-//добавление новых шариков в случайную позицию
-void MainWindow::keyPressEvent(QKeyEvent *key){
+
+//добавление n шариков в случайную позицию
+void MainWindow::startCircles(int n){
 
     QTime midnight(0,0,0);
     qsrand(midnight.secsTo(QTime::currentTime()));
 
-    if(key->key()==Qt::Key_Space){
 
+    for(int i=0;i<n;i++){
         paintWidget* paint= new paintWidget(this);
         circle* m_circle = new circle();
 
@@ -63,14 +60,11 @@ void MainWindow::keyPressEvent(QKeyEvent *key){
         paint->move(x,y);
         paint->show();
 
+        QObject::connect(paint,SIGNAL(destroy(int*)),this,SLOT(paintDestroy(int*)));
         circles.push_back(m_circle);
         paintHash.insert(paint->getWID(),paint);
 
     }
-}
-
-void MainWindow::dropEvent(QDropEvent *event){
-
 }
 
 
@@ -86,7 +80,7 @@ void MainWindow::widgetCircle(QMouseEvent* event){
     paint->setCircle(m_circle);
     paint->move(event->pos().x(),event->pos().y());
     paint->show();
-
+    QObject::connect(paint,SIGNAL(destroy(int*)),this,SLOT(paintDestroy(int*)));
     circles.push_back(m_circle);
     paintHash.insert(paint->getWID(),paint);
 
@@ -94,10 +88,10 @@ void MainWindow::widgetCircle(QMouseEvent* event){
 
 
 //слот завершения потока рассчета ближайшего шарика и запуск анимации движения к нему
-void MainWindow::threadPoll(circle* c,circle* target){
+void MainWindow::threadPoll(circle* c, circle* target){
 
       paintWidget* paint = paintHash.find(c->getID()).value();
-      paint->animation(QRect(c->getX(), c->getY(), 30, 30),QRect(target->getX(), target->getY(), 30, 30),3000);
+      paint->animation(QRect(c->getX(), c->getY(), 30, 30),QRect(target->getX(), target->getY(), 30, 30),10000);
 }
 
 //получение координат шариков при анимации
@@ -118,10 +112,28 @@ void MainWindow::timer_overflow(){
         QObject::connect(s,SIGNAL(finish(circle*,circle*)),this,SLOT(threadPoll(circle*,circle*)));
         s->setArrayCircles(&circles);
 
-        QThreadPool::globalInstance()->start(s);
+
+            QThreadPool::globalInstance()->start(s);
+
         i++;
-   }
+    }
 }
+
+void MainWindow::paintDestroy(int* id){
+
+    paintHash.erase(paintHash.find(*id));
+    std::vector<circle*>::iterator it=circles.begin();
+
+    for(;it!=circles.end();++it){
+        circle* c=*it;
+        if(*id==c->getID()){
+            circles.erase(it);
+        }
+    }
+
+}
+
+
 
 
 
