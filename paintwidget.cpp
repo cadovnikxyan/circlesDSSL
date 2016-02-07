@@ -11,6 +11,8 @@ paintWidget::paintWidget(QWidget *parent) : QWidget(parent),x(0),y(0){
     setMaximumSize(200,200);
     setObjectName("circle "+QString::number(wID));
     setAcceptDrops(true);
+    QRegion r(0,0,100,100, QRegion::Ellipse);
+    this->setMask(r);
 
 }
 
@@ -25,7 +27,7 @@ void paintWidget::paintEvent(QPaintEvent *){
     painter.begin(this);
     painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::FlatCap));
     painter.setBrush(QBrush(Qt::red, Qt::SolidPattern));
-    painter.drawEllipse(0,0,30,30);
+    painter.drawEllipse(0,0,100,100);
     painter.end();
 }
 
@@ -42,7 +44,9 @@ void paintWidget::mouseMoveEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton)
         {
             this->move(mapToParent(event->pos() - offset));
+            dragFlag=true;
         }
+
 }
 
 //лопание шарика по нажатию правой кнопки мыши
@@ -61,9 +65,14 @@ void paintWidget::mousePressEvent(QMouseEvent *event){
     }
 }
 
+void paintWidget::mouseReleaseEvent(QMouseEvent *event){
 
+    if(event->button()==Qt::LeftButton){
+         this->move(mapToParent(event->pos()));
+         dragFlag=false;
+    }
 
-
+}
 
 
 qreal easingCurve(qreal progress){

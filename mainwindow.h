@@ -7,7 +7,7 @@
 #include <QHash>
 #include <vector>
 #include <QTime>
-
+#include <QTouchEvent>
 #include "settlements.h"
 #include "paintwidget.h"
 
@@ -26,6 +26,7 @@ public:
 
     void mouseDoubleClickEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
+
     void startCircles(int n);
     void widgetCircle(QMouseEvent* event);
 
@@ -39,6 +40,9 @@ public slots:
     void threadPoll(circle* c,circle* target);
     void timer_overflow();
     void paintDestroy(int* id);
+
+private slots:
+    void on_pushButton_clicked();
 
 private:
 

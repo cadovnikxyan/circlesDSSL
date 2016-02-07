@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer=new QTimer();
     QObject::connect(timer,SIGNAL(timeout()), this, SLOT(timer_overflow()));
     startCircles(10);
+    setAttribute(Qt::WA_AcceptTouchEvents);
 
 }
 
@@ -21,7 +22,7 @@ MainWindow::~MainWindow(){
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event){
 
     if(event->button()==Qt::LeftButton){
-         timer->start(500);
+         timer->start(500);       
     }
 }
 
@@ -49,8 +50,8 @@ void MainWindow::startCircles(int n){
         paintWidget* paint= new paintWidget(this);
         circle* m_circle = new circle();
 
-        int x=qrand()%764;
-        int y=qrand()%495;
+        int x=qrand()%this->window()->size().width();
+        int y=qrand()%this->window()->size().height();
 
         m_circle->setX(x);
         m_circle->setY(y);
@@ -58,6 +59,7 @@ void MainWindow::startCircles(int n){
 
         paint->setCircle(m_circle);
         paint->move(x,y);
+        paint->resize(100,100);
         paint->show();
 
         QObject::connect(paint,SIGNAL(destroy(int*)),this,SLOT(paintDestroy(int*)));
@@ -91,7 +93,9 @@ void MainWindow::widgetCircle(QMouseEvent* event){
 void MainWindow::threadPoll(circle* c, circle* target){
 
       paintWidget* paint = paintHash.find(c->getID()).value();
-      paint->animation(QRect(c->getX(), c->getY(), 30, 30),QRect(target->getX(), target->getY(), 30, 30),10000);
+      if(!paint->dragFlag){
+          paint->animation(QRect(c->getX(), c->getY(), 100, 100),QRect(target->getX(), target->getY(), 100, 100),10000);
+      }
 }
 
 //получение координат шариков при анимации
@@ -134,7 +138,7 @@ void MainWindow::paintDestroy(int* id){
 }
 
 
+void MainWindow::on_pushButton_clicked(){
 
-
-
-
+    startCircles(1);
+}

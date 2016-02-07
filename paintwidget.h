@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QPropertyAnimation>
 #include <QEasingCurve>
+#include <QThread>
+#include <QRegion>
 #include <cmath>
 #include "circle.h"
 #include "float.h"
@@ -24,12 +26,14 @@ public:
 
     void mouseMoveEvent ( QMouseEvent * event );
     void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent* event);
     void animation(QRect coordinateStart, QRect coordinateStop , int speed);
     int getX() const;
     int getY() const;
 
     int getWID() const;
     void setWID(int value);
+    bool dragFlag=false;
 
 signals:
     void destroy(int* id);
@@ -38,7 +42,6 @@ private:
     QPainter painter;
     circle* m_circle;
     QPoint offset;
-
     int x,y,wID;
     static int allID;
 //    qreal easingCurve(qreal progress);
